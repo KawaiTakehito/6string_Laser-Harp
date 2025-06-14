@@ -40,7 +40,7 @@ Arduino MicroのA0～A5ピンをフォトトランジスタに接続し、レー
 
 1.  **このリポジトリをクローンまたはダウンロードします**
     ```bash
-    git clone [https://github.com/horsebone-entangle/6string_Laser-Harp.git](https://github.com/horsebone-entangle/6string_Laser-Harp.git)
+    git clone https://github.com/horsebone-entangle/6string_Laser-Harp.git
     ```
 
 2.  **Arduino IDEを開きます**
