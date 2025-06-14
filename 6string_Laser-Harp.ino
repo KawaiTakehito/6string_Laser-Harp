@@ -1,15 +1,21 @@
 #include <MIDIUSB.h>
-
+//光センサーのピン定義
 const int sensor[6] = {A0, A1, A2, A3, A4, A5};
 
+//各センサーの閾値　（デフォルトは200）
 int sensor_th[6] = {200,200,200,200,200,200};
 
-bool sensor_state_now[6] = {0, 0, 0, 0, 0, 0,};
-bool sensor_state_old[6] = {0, 0, 0, 0, 0, 0,};
+//各センサーの状態を格納する配列
+bool sensor_state_now[6] = {0, 0, 0, 0, 0, 0};
+//各センサーの過去の状態を格納する配列
+bool sensor_state_old[6] = {0, 0, 0, 0, 0, 0};
 
+//レーザを遮った数を格納
 int trigger_num[6] = {0, 0, 0, 0, 0, 0,};
+//trigger_numの上限
 const int trigger_max[6] = {12, 12, 12, 12, 12, 12};
 
+//音階の番号を格納 C2~C7までの6オクターブ　×　C~Bまでの12音階の配列
 int note_no[6][12] = {
                         {36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47},
                         {48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59},
@@ -19,12 +25,20 @@ int note_no[6][12] = {
                         {96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107}
                         };
 
+//デバッグ用の機能（シリアルモニタを使うもの）のON/OFF切り替え
 bool SerialSW = true;
 bool SensorMonitor = false;
 
 void setup() {
   Serial.begin(9600);
+
+  //内蔵LEDの出力
   pinMode(LED_BUILTIN, OUTPUT);
+
+  /**
+  6つの光センサーの値を20回取得し平均を取る
+  それらの値に175をを足したものを各センサーの閾値とする
+  **/
   int valueofLight;
   float sum[6] = {0,0,0,0,0,0};
   for(int i=0;i<6;i++){
@@ -57,7 +71,7 @@ void setup() {
 }
 
 void loop() {
-
+  //レーザーを遮った(各センサーの値が閾値未満)ならsensor_state_nowを1に、それ以外なら0に
   for(int string=0; string<6; string++){
     if(analogRead(sensor[string]) < sensor_th[string]){
       sensor_state_now[string] = 1;
@@ -67,7 +81,11 @@ void loop() {
     }
   }
 
-  
+  /***
+  sensor_state_nowが1のときmidi信号を出力
+  trigger_numを1増やす（音階が1音上がる）
+  trigger_maxを超えるとtrigger_numは0に戻る
+  ***/
   for(int string=0; string<6; string++){
     if(sensor_state_now[string] != sensor_state_old[string]){
       int num = trigger_num[string];
@@ -86,6 +104,10 @@ void loop() {
   sensor_state_old[string] = sensor_state_now[string];
   }
 
+  /**
+  C0~F0のmidi信号を入力するとchoicestringをそれぞれ0~6に変更する
+  C1~B1のmidi信号を入力するとtrigger_num[choicestring]をそれぞれ0~12に変更する
+  **/
   int choicestring = 0;
   midiEventPacket_t rx;
   do {
@@ -117,6 +139,7 @@ void loop() {
     }
   } while (rx.header != 0);
 
+  //センサーが取得した値を表示(デバッグ用)
   if(SensorMonitor){
     for(int i=0;i<6;i++){
       int SensorMonitor = analogRead(sensor[i]);
@@ -129,6 +152,7 @@ void loop() {
   }
 }
 
+//以下MIDIUSBライブラリ付属の関数
 void noteOn(byte channel, byte pitch, byte velocity) {
   midiEventPacket_t noteOn = {0x09, 0x90 | channel, pitch, velocity};
   MidiUSB.sendMIDI(noteOn);
