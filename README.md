@@ -1,5 +1,5 @@
 # 6string_Laser-Harp
-[Arduino Microとレーザーモジュール、フォトトランジスタを用いたレーザーハープのソースコード]
+Arduino Microとレーザーモジュール、フォトトランジスタを用いたレーザーハープのソースコード
 
 ## 目次
 * [概要](#概要)
@@ -13,11 +13,11 @@
 ## 概要
 Arduino MicroのA0～A5ピンをフォトトランジスタに接続し、レーザー光をフォトトランジスタに当てます
 レーザー光を遮るとMIDI信号が入力されます
-6つのセンサーにはそれぞれ、C2~B2,C3~B3,C4~B4,C5~B5,C6~B6,C7~B7の音が割り当てられており、一回遮るごとにC→C#→D・・・と音階が上がります
-[レーザーハープ全面](images/Laser-Harp2.jpg)
-[レーザーハープ後面](images/Laser-Harp1.jpg)
-[基盤表](images/board1.jpg)
-[基盤裏](images/board2.jpg)
+6つのセンサーにはそれぞれ、C2~B2　C3~B3　C4~B4　C5~B5　C6~B6　C7~B7の音が割り当てられており、一回遮るごとにC→C#→D・・・と音階が上がります
+* [レーザーハープ全面](images/Laser-Harp2.jpg)
+* [レーザーハープ後面](images/Laser-Harp1.jpg)
+* [基盤表](images/board1.jpg)
+* [基盤裏](images/board2.jpg)
 
 ## 必要なもの
 
@@ -72,7 +72,7 @@ Arduino MicroのA0～A5ピンをフォトトランジスタに接続し、レー
 | Arduinoピン |   　　部 品　　 |  　　備　考   |
 | :---------- | :------------- | :----------- |
 | A0~A5       | 560nm NJL7502L |200KΩ抵抗を使用|  
-| :---------- | :------------- | :----------- |
+
 
 ## ライブラリ
 * [`MIDIUSB`](https://docs.arduino.cc/libraries/midiusb/) - [ArduinoボードをMIDIデバイス化するライブラリ]
