@@ -1,18 +1,11 @@
 #include <MIDIUSB.h>
-#include <math.h>
-
-const int SW1 = 2;
 
 const int sensor[6] = {A0, A1, A2, A3, A4, A5};
-const int midiPin[6] = { 2, 3, 4, 5, 6, 7 };
 
 int sensor_th[6] = {200,200,200,200,200,200};
 
 bool sensor_state_now[6] = {0, 0, 0, 0, 0, 0,};
 bool sensor_state_old[6] = {0, 0, 0, 0, 0, 0,};
-
-bool sw_state_now = 0;
-bool sw_state_old = 0;
 
 int trigger_num[6] = {0, 0, 0, 0, 0, 0,};
 const int trigger_max[6] = {12, 12, 12, 12, 12, 12};
@@ -31,11 +24,7 @@ bool SensorMonitor = false;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(SW1, INPUT);
   pinMode(LED_BUILTIN, OUTPUT);
-  for (int i = 0; i < 6; i++) {
-    pinMode(midiPin[i], OUTPUT);
-  }
   int valueofLight;
   float sum[6] = {0,0,0,0,0,0};
   for(int i=0;i<6;i++){
@@ -68,14 +57,6 @@ void setup() {
 }
 
 void loop() {
-
-  for (int string = 0; string < 6; string++) {
-    if (digitalRead(midiPin[string]) == HIGH) {
-      sensor_state_now[string] = 1;
-    } else {
-      sensor_state_now[string] = 0;
-    }
-  }
 
   for(int string=0; string<6; string++){
     if(analogRead(sensor[string]) < sensor_th[string]){
